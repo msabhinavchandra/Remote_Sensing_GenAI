@@ -383,7 +383,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
                 // Submit button to register user
                 ElevatedButton(
-                  onPressed: _sendOTP,  // Send OTP when pressed
+                  onPressed: _sendOTP, // Send OTP when pressed
                   child: const Text('Submit'),
                 ),
               ],
@@ -396,11 +396,12 @@ class _SignUpPageState extends State<SignUpPage> {
 
   // Step 1: Send OTP to the phone number
   Future<void> _sendOTP() async {
-    final phoneNumber = _phoneController.text.trim();  // Get the phone number
+    final phoneNumber = _phoneController.text.trim(); // Get the phone number
 
     if (phoneNumber.isNotEmpty) {
       await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: '+91$phoneNumber',  // Add country code (replace with the relevant country code)
+        phoneNumber:
+            '+$phoneNumber', // Add country code (replace with the relevant country code)
         verificationCompleted: (PhoneAuthCredential credential) async {
           // Auto-verification for Android devices
           await FirebaseAuth.instance.signInWithCredential(credential);
@@ -414,12 +415,13 @@ class _SignUpPageState extends State<SignUpPage> {
         codeSent: (String verificationId, int? resendToken) {
           // OTP successfully sent
           setState(() {
-            _verificationId = verificationId;  // Store verification ID
+            _verificationId = verificationId; // Store verification ID
           });
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => PhoneVerificationPage(verificationId: verificationId),
+              builder: (context) =>
+                  PhoneVerificationPage(verificationId: verificationId),
             ),
           );
         },
