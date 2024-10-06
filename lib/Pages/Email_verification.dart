@@ -1,10 +1,10 @@
+
 import 'package:flutter/material.dart';
 import 'package:email_otp/email_otp.dart';
 import 'PasswordCreationPage.dart';
 import 'CommonBackground.dart';
 
 class EmailVerificationPage extends StatefulWidget {
-  // final String email;
   final String firstName;
   final String lastName;
   final String username;
@@ -28,83 +28,154 @@ class EmailVerificationPage extends StatefulWidget {
 
 class _EmailVerificationPageState extends State<EmailVerificationPage> {
   final TextEditingController _codeController = TextEditingController();
+  bool _isLoading = false;
 
-  Future<bool> verifyEmailOtp(String email, String otp) async {
-    bool otpVerified = EmailOTP.verifyOTP(otp: otp);
-    return otpVerified;
+  Future<void> _verifyOTP() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    String code = _codeController.text.trim();
+    bool otpVerified = EmailOTP.verifyOTP(otp: code);
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (otpVerified) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Email verified successfully')),
+      );
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PasswordCreationPage(
+            email: widget.email,
+            firstName: widget.firstName,
+            lastName: widget.lastName,
+            username: widget.username,
+            address: widget.address,
+            phoneNumber: widget.phoneNumber,
+          ),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Invalid verification code')),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Email Verification'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: theme.colorScheme.inversePrimary,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: CommonBackground(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(24.0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  const SizedBox(height: 40),
+                  Icon(
+                    Icons.email_outlined,
+                    size: 80,
+                    color: Colors.white,
+                  ),
+                  const SizedBox(height: 24),
                   Text(
-                    'A code has been sent to ${widget.email}.',
-                    style: const TextStyle(fontSize: 16, color: Colors.white),
-                    textAlign: TextAlign.center,
+                    'Verify your email',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
                   const SizedBox(height: 16),
+                  Text(
+                    'Enter the verification code sent to your email address:',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white70,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    widget.email,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 32),
                   TextField(
                     controller: _codeController,
                     keyboardType: TextInputType.number,
                     style: const TextStyle(color: Colors.white),
-                    decoration: const InputDecoration(
-                      labelText: 'Enter Verification Code',
-                      labelStyle: TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      labelText: 'Verification Code',
+                      labelStyle: const TextStyle(color: Colors.white70),
                       enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
+                        borderSide: BorderSide(color: Colors.white70),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.white),
                       ),
-                      border: OutlineInputBorder(),
+                      filled: true,
+                      fillColor: Colors.white.withOpacity(0.1),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 32),
+                  ElevatedButton(
+                    onPressed: _isLoading ? null : _verifyOTP,
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: _isLoading
+                        ? const CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          )
+                        : const Text(
+                            'Verify and Continue',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                  ),
+                  const SizedBox(height: 16),
+                  TextButton(
+                    onPressed: () {
+                      // Implement resend code functionality if desired
+                    },
+                    child: const Text(
+                      'Didn\'t receive the code? Resend',
+                      style: TextStyle(
+                        color: Colors.white70,
+                        decoration: TextDecoration.underline,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () async {
-                      String code = _codeController.text.trim();
-                      bool otpVerified = EmailOTP.verifyOTP(otp: code);
-
-                      if (otpVerified) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('Email verified successfully')),
-                        );
-
-                        // Navigate to Password Creation Page and pass required data
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PasswordCreationPage(
-                              email: widget.email,
-                              firstName: widget.firstName,
-                              lastName: widget.lastName,
-                              username: widget.username,
-                              address: widget.address,
-                              phoneNumber: widget.phoneNumber,
-                            ),
-                          ),
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('Invalid verification code')),
-                        );
-                      }
-                    },
-                    child: const Text('Verify and Submit'),
+                  Text(
+                    'Please check your spam folder if you don\'t see the email in your inbox.',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.white70,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
                 ],
               ),
