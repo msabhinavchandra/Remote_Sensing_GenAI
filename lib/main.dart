@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import '../Pages/SplashScreen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart'; // Import dotenv
+// Import the DefaultFirebaseOptions class
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
   await dotenv.load(fileName: "Backend/.env"); // Load the .env file
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+ // await dotenv.load(fileName: "Backend/.env"); // Load the .env file
   runApp(MyApp());
 }
 
