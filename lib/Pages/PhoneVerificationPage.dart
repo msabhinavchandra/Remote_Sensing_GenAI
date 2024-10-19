@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:remote_sensing/Pages/CommonBackground.dart';
@@ -71,8 +69,9 @@ class _PhoneVerificationPageState extends State<PhoneVerificationPage> {
 
   Future<bool> verifyOtp(String phoneNumber, String otp) async {
     final serverIp = dotenv.env['SERVER_IP'];
+    final serverPort = dotenv.env['PORT'];
     final response = await http.post(
-      Uri.parse('http://$serverIp:5000/verify-otp'),
+      Uri.parse('http://$serverIp:$serverPort/verify-otp'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'phoneNumber': phoneNumber, 'otp': otp}),
     );
