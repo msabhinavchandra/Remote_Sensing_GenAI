@@ -19,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
             builder: (context) => const MyHomePage(title: 'Login Page')),
       );
     });
-  }//init state done.
+  } //init state done.
 
   @override
   Widget build(BuildContext context) {
