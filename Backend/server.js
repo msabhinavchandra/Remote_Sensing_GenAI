@@ -1,6 +1,5 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const twilio = require('twilio');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const ort = require('onnxruntime-node');
@@ -8,8 +7,8 @@ const fs = require('fs');
 const path = require('path');
 const { Buffer } = require('buffer');
 const sharp = require('sharp');  // For image processing
+const axios = require('axios');   // For making HTTP requests
 
-// const modelPath = path.join(__dirname, 'modelSpec.onnx');
 // Load environment variables from the .env file
 dotenv.config();
 
@@ -20,8 +19,6 @@ const port = process.env.PORT || 3000;
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const verifyServiceSid = process.env.TWILIO_VERIFY_SERVICE_SID;
-
-const client = twilio(accountSid, authToken);
 
 // Enable CORS for cross-origin requests
 app.use(cors());
@@ -86,7 +83,6 @@ async function preprocessImage(imageBuffer) {
   }
 }
 
-
 // Inference function
 async function runModel(imageTensor) {
   try {
@@ -105,8 +101,6 @@ async function runModel(imageTensor) {
     throw new Error('Model inference failed');
   }
 }
-
-
 
 app.post('/predict', async (req, res) => {
   const base64Image = req.body.image;
@@ -138,39 +132,71 @@ app.get('/', (req, res) => {
   res.send('Hello, World! The server is running.');
 });
 
-// Endpoint to send OTP via SMS using Twilio Verify API
-app.post('/send-otp', (req, res) => {
+// Endpoint to send OTP via SMS using Twilio Verify API with Axios
+app.post('/send-otp', async (req, res) => {
   const { phoneNumber } = req.body;
 
-  client.verify.v2.services(verifyServiceSid)
-  .verifications.create({
-    to: phoneNumber,
-    channel: 'sms',
-  })
+  const url = `https://verify.twilio.com/v2/Services/${verifyServiceSid}/Verifications`;
 
+  const data = new URLSearchParams({
+    To: phoneNumber,
+    Channel: 'sms',
+  });
 
-    .then(verification => res.status(200).send({ sid: verification.sid }))
-    .catch(error => res.status(500).send({ error: error.message }));
+  const auth = {
+    username: accountSid,
+    password: authToken,
+  };
+
+  try {
+    const response = await axios.post(url, data.toString(), {
+      auth,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+
+    res.status(200).send({ sid: response.data.sid });
+  } catch (error) {
+    console.error('Error sending OTP:', error.response?.data || error.message);
+    res.status(500).send({ error: error.message });
+  }
 });
 
-
-// Endpoint to verify OTP using Twilio Verify API
-app.post('/verify-otp', (req, res) => {
+// Endpoint to verify OTP using Twilio Verify API with Axios
+app.post('/verify-otp', async (req, res) => {
   const { phoneNumber, otp } = req.body;
 
-  client.verify.v2.services(verifyServiceSid)
-    .verificationChecks.create({
-      to: phoneNumber,
-      code: otp,
-    })
-    .then(verificationCheck => {
-      if (verificationCheck.status === 'approved') {
-        res.status(200).send({ message: 'OTP verified successfully' });
-      } else {
-        res.status(400).send({ message: 'Invalid OTP' });
-      }
-    })
-    .catch(error => res.status(500).send({ error: error.message }));
+  const url = `https://verify.twilio.com/v2/Services/${verifyServiceSid}/VerificationCheck`;
+
+  const data = new URLSearchParams({
+    To: phoneNumber,
+    Code: otp,
+  });
+
+  const auth = {
+    username: accountSid,
+    password: authToken,
+  };
+
+  try {
+    const response = await axios.post(url, data.toString(), {
+      auth,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+
+    const verificationCheck = response.data;
+    if (verificationCheck.status === 'approved') {
+      res.status(200).send({ message: 'OTP verified successfully' });
+    } else {
+      res.status(400).send({ message: 'Invalid OTP' });
+    }
+  } catch (error) {
+    console.error('Error verifying OTP:', error.response?.data || error.message);
+    res.status(500).send({ error: error.message });
+  }
 });
 
 // Use HTTP for debugging

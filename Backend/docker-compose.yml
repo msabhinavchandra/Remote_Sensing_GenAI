@@ -1,0 +1,14 @@
+version: "3"
+services:
+  backend:
+    build: .
+    ports:
+      - "8080:8080"  # Exposing the backend on port 8080
+    env_file:
+      - .env  # Load environment variables from the .env file
+    volumes:
+      - ./:/app  # Mount your local app directory to the container
+      - ./modelSpecNew.onnx:/app/modelSpecNew.onnx  # Mount the model file
+    platform: linux/amd64  # Specify the platform as x86_64
+    command: ["node", "server.js"]  # Command to run your server
+    restart: always  # Ensures your container restarts in case of failure

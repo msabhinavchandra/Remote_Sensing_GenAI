@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -28,6 +27,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Future<void> sendOtp(String phoneNumber) async {
     // Load IP from the .env file
     final serverIp = dotenv.env['SERVER_IP'];
+    final serverPort = dotenv.env['PORT'];
 
     // Ensure the phone number starts with +91
     if (!phoneNumber.startsWith('+91')) {
@@ -35,7 +35,7 @@ class _SignUpPageState extends State<SignUpPage> {
     }
 
     final response = await http.post(
-      Uri.parse('http://$serverIp:5000/send-otp'),
+      Uri.parse('http://$serverIp:$serverPort/send-otp'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'phoneNumber': phoneNumber}),
     );

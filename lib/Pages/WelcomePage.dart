@@ -41,6 +41,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
   Future<void> _uploadImage() async {
     final serverIp = dotenv.env['SERVER_IP'];
+    final serverPort = dotenv.env['PORT'];
     if (_image == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please select an image first.')),
@@ -57,7 +58,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
     // Prepare the request payload
     var response = await http.post(
-      Uri.parse('http://$serverIp:5000/predict'),
+      Uri.parse('http://$serverIp:$serverPort/predict'),
       headers: {
         'Content-Type': 'application/json',
       },
