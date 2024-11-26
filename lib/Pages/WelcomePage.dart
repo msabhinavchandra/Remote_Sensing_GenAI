@@ -1,9 +1,12 @@
+
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'MyHomePage.dart';
+import 'dashboard.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -15,12 +18,7 @@ class WelcomePage extends StatefulWidget {
 class _WelcomePageState extends State<WelcomePage> {
   File? _image;
   String? _prediction;
-  bool _isLoading = false; // Added to manage loading state
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  bool _isLoading = false; // Loading state
 
   Future<void> _pickImage() async {
     try {
@@ -84,6 +82,19 @@ class _WelcomePageState extends State<WelcomePage> {
     });
   }
 
+  // void _logout() {
+  //   Navigator.pop(context); // Navigate back to the login or previous page
+  // }
+
+  void _logout() {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+          builder: (context) => const MyHomePage(title: 'Login Page')),
+      (route) => false, // Remove all previous routes
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,6 +102,28 @@ class _WelcomePageState extends State<WelcomePage> {
         title: const Text('Crop Predictor'),
         centerTitle: true,
         elevation: 0,
+        // leading: IconButton(
+        //   icon: const Icon(Icons.arrow_back),
+        //   onPressed: () {
+        //     Navigator.pop(context); // Navigate to the previous page
+        //   },
+        // ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const Dashboard()),
+            );
+          },
+        ),
+
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: _logout, // Call the logout method
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(

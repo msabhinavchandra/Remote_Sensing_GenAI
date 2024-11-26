@@ -3,6 +3,7 @@ import 'Sign_up_Page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'WelcomePage.dart';
+import 'dashboard.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -55,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // Navigate to the Welcome Page on successful login
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const WelcomePage()),
+          MaterialPageRoute(builder: (context) => const Dashboard()),
         );
       } on FirebaseAuthException catch (e) {
         String message;
