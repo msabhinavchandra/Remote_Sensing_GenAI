@@ -73,7 +73,7 @@ class Dashboard extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const ColorizeSARPage()),
+                              builder: (context) => ColorizeSARPage()),
                         );
                       },
                     ),

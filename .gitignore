@@ -67,3 +67,5 @@ pubspec.lock
 
 # Ignore the model file
 modelSpecNew.onnx
+
+*.onnx
