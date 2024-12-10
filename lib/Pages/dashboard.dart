@@ -92,6 +92,22 @@ class Dashboard extends StatelessWidget {
                         );
                       },
                     ),
+                    _buildDashboardCard(
+                      context,
+                      title: 'Flood Detection',
+                      subtitle: 'Detect Floods',
+                      icon: Icons.flood,
+                      color: Colors.blue,
+                      image: 'assets/images/predict_crops.jpg',
+                      onTap: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const CropClassificationVit()),
+                        );
+                      },
+                    )
                   ],
                 ),
               ),

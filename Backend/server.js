@@ -95,7 +95,9 @@ async function preprocessImage(imageBuffer) {
     console.error("Error preprocessing image:", error);
     throw new Error("Image preprocessing failed");
   }
-}
+} //this is for SAR
+
+//preprocessing for vgg16
 
 // Existing inference function
 async function runModel(imageTensor) {
@@ -185,7 +187,6 @@ async function preprocessSarImage(imageBuffer) {
 }
 
 // module.exports = preprocessSarImage;
-
 
 // module.exports = preprocessSarImage;
 
