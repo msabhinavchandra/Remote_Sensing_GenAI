@@ -1,8 +1,7 @@
-
-
 import 'package:flutter/material.dart';
 import 'WelcomePage.dart'; // Import the existing WelcomePage
 import 'ColorizeSARPage.dart'; // Import the new ColorizeSARPage
+import 'CropClassificationVit.dart'; // Import the new CropClassificationVit
 
 class Dashboard extends StatelessWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -35,7 +34,7 @@ class Dashboard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Text(
-                'Welcome to RemSenseAI Dashboard',
+                'Welcome to RemSenseAI',
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
@@ -49,7 +48,7 @@ class Dashboard extends StatelessWidget {
                   children: [
                     _buildDashboardCard(
                       context,
-                      title: 'Predict Crops',
+                      title: 'Predict Crops(VGG16)',
                       subtitle: 'Identify the crops',
                       icon: Icons.agriculture,
                       color: Colors.green,
@@ -74,6 +73,22 @@ class Dashboard extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                               builder: (context) => ColorizeSARPage()),
+                        );
+                      },
+                    ),
+                    _buildDashboardCard(
+                      context,
+                      title: 'Predict Crops(VIT)',
+                      subtitle: 'Identify the crops',
+                      icon: Icons.agriculture,
+                      color: Colors.green,
+                      image: 'assets/images/predict_crops.jpg',
+                      onTap: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const CropClassificationVit()),
                         );
                       },
                     ),
