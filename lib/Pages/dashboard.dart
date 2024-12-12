@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'WelcomePage.dart'; // Import the existing WelcomePage
 import 'ColorizeSARPage.dart'; // Import the new ColorizeSARPage
 import 'CropClassificationVit.dart'; // Import the new CropClassificationVit
+import 'FloodDetection.dart';
 
 class Dashboard extends StatelessWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -104,7 +105,7 @@ class Dashboard extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  const CropClassificationVit()),
+                                  const FloodDetection()),
                         );
                       },
                     )
