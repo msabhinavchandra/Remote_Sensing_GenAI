@@ -1,5 +1,3 @@
-
-
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -132,11 +130,11 @@ class _FloodDetectionState extends State<FloodDetection> {
           padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
           child: Column(
             children: [
-              const Text(
-                'Welcome to the Flood Detection App!',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
+              // const Text(
+              //   'Welcome to the Flood Detection App!',
+              //   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              //   textAlign: TextAlign.center,
+              // ),
               const SizedBox(height: 24),
               GestureDetector(
                 onTap: _pickImage,

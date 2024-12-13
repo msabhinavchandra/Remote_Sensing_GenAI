@@ -9,6 +9,8 @@ services:
     volumes:
       - ./:/app  # Mount your local app directory to the container
       - ./modelSpecNew.onnx:/app/modelSpecNew.onnx  # Mount the model file
+      - ./Colorize.onnx:/app/Colorize.onnx  # Mount the model file
+      - ./FloodDetection.onnx:/app/FloodDetection.onnx  # Mount the model file
     platform: linux/amd64  # Specify the platform as x86_64
     command: ["node", "server.js"]  # Command to run your server
     restart: always  # Ensures your container restarts in case of failure
