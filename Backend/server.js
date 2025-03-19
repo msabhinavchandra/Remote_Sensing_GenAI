@@ -10,7 +10,7 @@ const sharp = require("sharp"); // For image processing
 // const axios = require("axios"); // For making HTTP requests
 const multer = require("multer");
 const cv = require("@techstark/opencv-js");
-
+const axios = require("axios");
 const floodModelPath = path.join(__dirname, 'FloodDetection.onnx');
 let floodSession;
 
@@ -36,7 +36,7 @@ app.use(bodyParser.json({ limit: "50mb" })); // Adjust payload size limit for la
 app.use(bodyParser.json());
 // Load ONNX models
 const modelPath = path.join(__dirname, "modelSpecNew.onnx"); // Path to existing ONNX model
-const pix2pixmodelPath = path.join(__dirname, "Colorize.onnx"); // Path to SAR2RGB ONNX model
+const pix2pixmodelPath = path.join(__dirname, "Colorize2.onnx"); // Path to SAR2RGB ONNX model
 
 let session;
 let sarSession;
